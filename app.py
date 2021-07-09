@@ -33,14 +33,20 @@ def home():
 @app.route("/api/v1.0/all_star")
 def all_star_query():
     all_star_q = session.query(all_star.player_id, player.name_first, player.name_last, salary.salary).filter(all_star.year >='2001').filter(player.player_id == all_star.player_id).filter(all_star.player_id == salary.player_id).all()
+    session.close()
     return jsonify(all_star_q)
 
 @app.route("/api/v1.0/wins")
 def wins_query():
     wins_q = session.query(team.year, team.name, team.w, func.sum(salary.salary)).filter(team.year >= '2001').filter(team.team_id == salary.team_id).group_by(team.year, team.name).all()
+    session.close()
     return jsonify(wins_q)
 
 @app.route("/api/v1.0/ws_wins")
 def ws_wins_query():
     ws_q = session.query(team.year, team.name, team.ws_win, func.sum(salary.salary)).filter(team.year >= '2001').filter(team.team_id == salary.team_id).group_by(team.year, team.name).all()
+    session.close()
     return jsonify(ws_q)
+
+if __name__ == '__main__':
+    app.run(debug=True)
