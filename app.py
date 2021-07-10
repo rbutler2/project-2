@@ -4,7 +4,7 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 #set up variables for the api
 app = Flask(__name__)
@@ -27,7 +27,8 @@ session = Session(engine)
 #set up the home page
 @app.route("/")
 def home():
-    return "The avaliable paths are /api/v1.0/all_star, /api/v1.0/wins, /api/v1.0/ws_wins"
+    #return "The avaliable paths are /api/v1.0/all_star, /api/v1.0/wins, /api/v1.0/ws_wins"
+    return render_template("index.html")
 
 #set up all star route
 @app.route("/api/v1.0/all_star")
