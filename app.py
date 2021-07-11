@@ -39,13 +39,13 @@ def all_star_query():
 
 @app.route("/api/v1.0/wins")
 def wins_query():
-    wins_q = session.query(team.year, team.name, team.w, func.sum(salary.salary)).filter(team.year >= '2001').filter(team.team_id == salary.team_id).group_by(team.year, team.name).all()
+    wins_q = session.query(team.year, team.name, team.w, func.sum(salary.salary)).filter(team.year >= '2001').filter(team.team_id == salary.team_id).filter(team.year == salary.year).group_by(team.year, team.name).all()
     session.close()
     return jsonify(wins_q)
 
 @app.route("/api/v1.0/ws_wins")
 def ws_wins_query():
-    ws_q = session.query(team.year, team.name, team.ws_win, func.sum(salary.salary)).filter(team.year >= '2001').filter(team.team_id == salary.team_id).group_by(team.year, team.name).all()
+    ws_q = session.query(team.year, team.name, team.ws_win, func.sum(salary.salary)).filter(team.year >= '2001').filter(team.team_id == salary.team_id).filter(team.year == salary.year).group_by(team.year, team.name).all()
     session.close()
     return jsonify(ws_q)
 
