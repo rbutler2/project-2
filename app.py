@@ -33,7 +33,7 @@ def home():
 #set up all star route
 @app.route("/api/v1.0/all_star")
 def all_star_query():
-    all_star_q = session.query(all_star.player_id, player.name_first, player.name_last, salary.salary).filter(all_star.year >='2001').filter(player.player_id == all_star.player_id).filter(all_star.player_id == salary.player_id).all()
+    all_star_q = session.query(all_star.player_id, player.name_first, player.name_last, func.count(all_star.player_id), func.avg(salary.salary)).filter(all_star.year >='2001').filter(player.player_id == all_star.player_id).filter(all_star.player_id == salary.player_id).group_by(all_star.player_id).filter(all_star.year == salary.year).all()
     session.close()
     return jsonify(all_star_q)
 
