@@ -41,8 +41,8 @@ function buildwinsPlot() {
           xaxis: {range: win_teams },
           yaxis: {range: [40, 140]},
           autosize: false,
-          width: 1500,
-          height: 600,
+          width: 1200,
+          height: 700,
         };
     
         Plotly.newPlot("wins_plot", data, layout);
