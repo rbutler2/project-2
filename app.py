@@ -27,7 +27,7 @@ session = Session(engine)
 #set up the home page
 @app.route("/")
 def home():
-    #return "The avaliable paths are /api/v1.0/all_star, /api/v1.0/wins, /api/v1.0/ws_wins"
+    # return "The avaliable paths are /api/v1.0/all_star, /api/v1.0/wins, /api/v1.0/ws_wins"
     return render_template("index.html")
 
 #set up all star route
@@ -48,6 +48,21 @@ def ws_wins_query():
     ws_q = session.query(team.year, team.name, team.ws_win, func.sum(salary.salary)).filter(team.year >= '2001').filter(team.team_id == salary.team_id).filter(team.year == salary.year).group_by(team.year, team.name).all()
     session.close()
     return jsonify(ws_q)
+
+@app.route("/ws_wins")
+def homews():
+    #return "The avaliable paths are /api/v1.0/all_star, /api/v1.0/wins, /api/v1.0/ws_wins"
+    return render_template("index_ws.html")
+
+@app.route("/wins")
+def homewins():
+    #return "The avaliable paths are /api/v1.0/all_star, /api/v1.0/wins, /api/v1.0/ws_wins"
+    return render_template("index_win.html")
+
+@app.route("/all_star")
+def homeas():
+    #return "The avaliable paths are /api/v1.0/all_star, /api/v1.0/wins, /api/v1.0/ws_wins"
+    return render_template("index_as.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

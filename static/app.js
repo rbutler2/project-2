@@ -10,26 +10,54 @@ var ws_years = new Array()
 var ws_team = new Array()
 var ws_wintitle = new Array()
 var ws_salary = new Array()
+let win_year = []
+let win_teams = []
+let win_total = []
+let win_salary = []
+var as_appearances = []
+var as_salary = []
+var as_fullname =[]
+
 
 // fetch Data and build arrays
 
-fetch(wswins)
-.then(response => {
-    return response.json();
-})
+Promise.all([
+	fetch(wswins),
+	fetch(wins),
+    fetch(allstar)
+])
+
 .then(wswins => {
     
-    wswins.forEach(function(data) {
-        if (data[2] == "Y") {
-        ws_years.push(data[0])
-        ws_team.push(data[1])
-        ws_wintitle.push(data[2])
-        ws_salary.push(data[3])
-    }})
+    wswins.forEach(function(wsdata) {
+        if (wsdata[2] == "Y") {
+        ws_years.push(wsdata[0])
+        ws_team.push(wsdata[1])
+        ws_wintitle.push(wsdata[2])
+        ws_salary.push(wsdata[3])
+    }})  
+})
+
+// .then(wins => {
+
+//     wins.forEach(function(wdata) {
+//         win_year.push(wdata[0])
+//         win_teams.push(wdata[1])
+//         win_total.push(wdata[2])
+//         win_salary.push(wdata[3])
+//     })
+// })
+
+.then(allstar => {
+    allstar.forEach(function(adata) {
+        as_appearances.push(adata[3]);
+        as_salary.push(adata[4]);
+        as_fullname.push(adata[1] + ' ' + adata[2]);
+    })
 });
 
 function build_ws_Plot() {
-    d3.json(wswins).then(function(data) {
+    d3.json(wswins).then(function(wsdata) {
 
         var ws_avg_sal = [65355444,67469251,70942071,69022198,72957113,77382421,82556300,89495289,88824233,
             90711996,92816843,97758040,101150855,106410587,117138086]
@@ -55,7 +83,7 @@ function build_ws_Plot() {
             line: {color: "orange"}
         };
 
-        var data = [trace1,trace2];
+        var wsdata = [trace1,trace2];
 
         var layout = {
             title: "World Series Winners by Year and Salary",
@@ -66,31 +94,31 @@ function build_ws_Plot() {
             height: 700,
         };
         
-        Plotly.newPlot("ws_plot", data, layout);
+        Plotly.newPlot("ws_plot", wsdata, layout);
     })};
 
 build_ws_Plot();
 
 ///////////////////////////////////////
 // Jared
-let win_year = []
-let win_teams = []
-let win_total = []
-let win_salary = []
-fetch(wins)
-.then(response => {
-    return response.json();
-})
-.then(wins => {
-    wins.forEach(function(data) {
-        win_year.push(data[0])
-        win_teams.push(data[1])
-        win_total.push(data[2])
-        win_salary.push(data[3])
-    })
-});
+// let win_year = []
+// let win_teams = []
+// let win_total = []
+// let win_salary = []
+// fetch(wins)
+// .then(response => {
+//     return response.json();
+// })
+// .then(wins => {
+//     wins.forEach(function(data) {
+//         win_year.push(data[0])
+//         win_teams.push(data[1])
+//         win_total.push(data[2])
+//         win_salary.push(data[3])
+//     })
+// });
 function buildwinsPlot() {
-    d3.json(wins).then(function(data) {
+    d3.json(wins).then(function(wdata) {
         var trace1 = {
           type: "scatter",
           mode: "markers",
@@ -101,7 +129,7 @@ function buildwinsPlot() {
           x: win_teams,
           y: win_total,
         };
-        var data = [trace1];
+        var wdata = [trace1];
         var layout = {
           title: "Total Wins Compared to Salary ",
           xaxis: {range: win_teams },
@@ -110,7 +138,7 @@ function buildwinsPlot() {
           width: 2000,
           height: 900,
         };
-        Plotly.newPlot("wins_plot", data, layout);
+        Plotly.newPlot("wins_plot", wdata, layout);
     })
 }
 buildwinsPlot();
@@ -118,23 +146,23 @@ buildwinsPlot();
 ///////////////////////////////////////
 // Sean
 
-fetch(allstar)
-.then(response => {
-    return response.json();
-});
-// d3.json(allstar).then(function(data) {
-//     console.log(data);
-//   });
+// fetch(allstar)
+// .then(response => {
+//     return response.json();
+// });
+// // d3.json(allstar).then(function(data) {
+// //     console.log(data);
+// //   });
 function buildASPlot() {
-    d3.json(allstar).then(function(data) {
-        var as_appearances = []
-        var as_salary = [];
-        var as_fullname =[];
-        data.forEach(function(data) {
-            as_appearances.push(data[3]);
-            as_salary.push(data[4]);
-            as_fullname.push(data[1] + ' ' + data[2]);
-        });
+    d3.json(allstar).then(function(adata) {
+    //     var as_appearances = []
+    //     var as_salary = [];
+    //     var as_fullname =[];
+    //     data.forEach(function(data) {
+    //         as_appearances.push(data[3]);
+    //         as_salary.push(data[4]);
+    //         as_fullname.push(data[1] + ' ' + data[2]);
+    //     });
         var trace1 = {
             type: "scatter",
             mode: "markers",
@@ -149,7 +177,7 @@ function buildASPlot() {
             "Appearances: %{y}<br>" +
             "<extra></extra>"
         }
-        var data = [trace1];
+        var adata = [trace1];
         var layout = {
             title: "Salary vs. All Star Appearance", 
             xaxis: {
@@ -162,7 +190,7 @@ function buildASPlot() {
            },
            hovermode: 'closest'
         };
-    Plotly.newPlot("as_plot", data, layout);
+    Plotly.newPlot("as_plot", adata, layout);
     })
 };
 buildASPlot();
